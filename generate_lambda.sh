@@ -55,7 +55,7 @@ function create_lambda_template()
     echo -e "${PURPLE}the settings will be automatically managed by the script generate_lambda.sh${NORMAL}"
     
     # the next instruction will automatically answer the question asked by the command 'sam init'
-    printf "%s\n" 1 9 $app_name 1 | sam init || exit_on_error "sam init"
+    printf "%s\n" 1 1 "y" $app_name | sam init || exit_on_error "sam init"
     
     cd ./"$app_name"
 
@@ -65,7 +65,7 @@ function create_lambda_template()
     echo "$template_no_scraper" > template.yaml
 
     # rename app main folder
-    mv "hello_world" $app_name
+    mv "hello-world" $app_name
 }
 
 function get_dependencies()
@@ -93,7 +93,7 @@ function deploy()
     
     # app_name, 2 enters and 4 yes
     set_app_name_no_underscores
-    printf "${app_name_dash}\n\ny\ny\ny\ny\n" | sam deploy --guided || exit_on_error "sam deploy --guided"
+    printf "${app_name_dash}\n\ny\ny\ny\ny\ny\n\n\ny\n" | sam deploy --guided || exit_on_error "sam deploy --guided"
 }
 
 function start_docker_env()
@@ -104,7 +104,7 @@ function start_docker_env()
 
 function create_python_requirements_file()
 {
-    file_content=$"selenium==$selenium_version\nchromedriver-binary==2.37.0\nrequests" 
+    file_content=$"selenium==$selenium_version\nchromedriver-binary==2.37.0\nrequests\npython-telegram-bot==13.11\n" 
     echo -e $file_content > ./requirements.txt
 }
 
@@ -132,7 +132,7 @@ function install_python_dependencies()
     mkdir -p ${python_dep_path}/python/lib/python3.6/site-packages
 
     echo -e "${YELLOW}password required to install python libs with pip${NORMAL}"
-    sudo -H pip install -r requirements.txt -t ${python_dep_path}/python/lib/python3.6/site-packages    
+    sudo -H pip3 install -r requirements.txt -t ${python_dep_path}/python/lib/python3.6/site-packages    
 }
 
 function set_app_name_no_underscores()
